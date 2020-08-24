@@ -1,5 +1,6 @@
-import * as actionTypes from './actionTypes';
 import axios from 'axios';
+
+import * as actionTypes from './actionTypes';
 
 export const authStart = () => {
   return {
@@ -21,10 +22,11 @@ export const authFail = (error) => {
     error: error,
   };
 };
+
 export const logout = () => {
   localStorage.removeItem('token');
-  localStorage.removeItem('userId');
   localStorage.removeItem('expirationDate');
+  localStorage.removeItem('userId');
   return {
     type: actionTypes.AUTH_LOGOUT,
   };
@@ -37,6 +39,7 @@ export const checkAuthTimeout = (expirationTime) => {
     }, expirationTime * 1000);
   };
 };
+
 export const auth = (email, password, isSignup) => {
   return (dispatch) => {
     dispatch(authStart());
@@ -58,8 +61,8 @@ export const auth = (email, password, isSignup) => {
           new Date().getTime() + response.data.expiresIn * 1000
         );
         localStorage.setItem('token', response.data.idToken);
-        localStorage.setItem('userId', response.data.localId);
         localStorage.setItem('expirationDate', expirationDate);
+        localStorage.setItem('userId', response.data.localId);
         dispatch(authSuccess(response.data.idToken, response.data.localId));
         dispatch(checkAuthTimeout(response.data.expiresIn));
       })
